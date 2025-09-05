@@ -40,11 +40,11 @@ defect-detection-app/
 
 Below are the images from the `src/static/ui_images/` directory:
 
-![UI Image 1](src/static/ui_images/image1.png)
-![UI Image 2](src/static/ui_images/image2.png)
-![UI Image 3](src/static/ui_images/image3.png)
-![UI Image 4](src/static/ui_images/image4.png)
-![UI Image 5](src/static/ui_images/image5.png)
+![UI Image 1](src/static/ui_images/1.png)
+![UI Image 2](src/static/ui_images/2.png)
+![UI Image 3](src/static/ui_images/3.png)
+![UI Image 4](src/static/ui_images/4.png)
+![UI Image 5](src/static/ui_images/5.png)
 <!-- Add or remove image lines as needed based on actual files in the directory -->
 
 
