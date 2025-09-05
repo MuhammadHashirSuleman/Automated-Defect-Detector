@@ -6,7 +6,7 @@ This project implements an automated defect detection system for industrial pipe
 ## Features
 - Web-based interface with user authentication
 - Image upload and preprocessing
-- Automated defect detection using YOLOv5 models
+- Automated defect detection using YOLOv5 and YOLOV11 models
 - Visualization of detected defects
 - Performance metrics and evaluation reports
 - Support for multiple defect types
