@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Detection Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --light-blue: #3b82f6;
+            --fresh-blue: #60a5fa;
+            --sky-blue: #93c5fd;
+            --pale-blue: #dbeafe;
+            --pure-white: #ffffff;
+            --off-white: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--pure-white);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1e293b;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Background Overlay */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            background: var(--pure-white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+            border: 1px solid var(--pale-blue);
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--pale-blue);
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h1 i {
+            margin-right: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-text {
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            background: var(--fresh-blue);
+            color: var(--pure-white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Detection Form */
+        .detection-form {
+            background: var(--off-white);
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid var(--pale-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--fresh-blue);
+            border-radius: 2px;
+        }
+
+        /* Radio Button Styling */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            display: block;
+            padding: 20px;
+            background: var(--pure-white);
+            border: 2px solid var(--pale-blue);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background: var(--pale-blue);
+            border-color: var(--fresh-blue);
+            color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .radio-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .radio-label::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--pale-blue);
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-icon::after {
+            content: '\f0ad';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            background: none;
+            font-size: 24px;
+            width: auto;
+            height: auto;
+        }
+
+        .crack-icon::after {
+            content: '\f002';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            background: none;
+            font-size: 24px;
+            width: auto;
+            height: auto;
+        }
+
+        .radio-subtext {
+            font-size: 14px;
+            color: var(--light-blue);
+            margin-top: 8px;
+        }
+
+        /* File Upload Styling */
+        .file-upload {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-label {
+            display: block;
+            padding: 30px;
+            background: var(--off-white);
+            border: 3px dashed var(--pale-blue);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .file-label::before {
+            content: '\f07c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 48px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .file-label:hover {
+            background: var(--pale-blue);
+            border-color: var(--fresh-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .file-text {
+            font-size: 16px;
+            color: var(--primary-blue);
+        }
+
+        .file-subtext {
+            font-size: 14px;
+            color: var(--light-blue);
+            margin-top: 8px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--fresh-blue);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Messages */
+        .message {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .success {
+            background: var(--pale-blue);
+            color: var(--primary-blue);
+            border-left: 5px solid var(--fresh-blue);
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            border-left: 5px solid #dc2626;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem 1rem;
+                padding: 25px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .radio-option {
+                min-width: auto;
+            }
+
+            .submit-btn {
+                font-size: 1rem;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .file-label::before {
+                font-size: 36px;
+            }
+
+            .radio-label::after {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-search"></i> Defect Detection</h1>
+            <div class="user-info">
+                <span class="welcome-text">Welcome, {{ session.username }}!</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="message {{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" enctype="multipart/form-data" class="detection-form">
+            <div class="form-section">
+                <div class="section-title">Detection Type</div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" name="detection_type" value="pipeline" id="pipeline" checked>
+                        <label for="pipeline" class="radio-label pipeline-icon">
+                            <strong>Pipeline Detection</strong>
+                            <div class="radio-subtext">Detect pipeline defects and anomalies</div>
+                        </label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="detection_type" value="crack" id="crack">
+                        <label for="crack" class="radio-label crack-icon">
+                            <strong>Crack Detection</strong>
+                            <div class="radio-subtext">Identify cracks and structural damage</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Image Upload</div>
+                <div class="file-upload">
+                    <input type="file" name="file" class="file-input" required>
+                    <label class="file-label">
+                        <div class="file-text">Click to upload image</div>
+                        <div class="file-subtext">Supports JPG, PNG, and other common formats</div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Analyze Image</button>
+        </form>
+    </div>
+
+    <script>
+        // File upload interaction
+        document.querySelector('.file-input').addEventListener('change', function(e) {
+            const label = document.querySelector('.file-label');
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                label.innerHTML = `
+                    <div style="font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 48px; margin-bottom: 15px;">\f00c</div>
+                    <div class="file-text">File Selected: ${fileName}</div>
+                    <div class="file-subtext">Click to choose a different file</div>
+                `;
+                label.style.background = 'var(--pale-blue)';
+                label.style.borderColor = 'var(--fresh-blue)';
+                label.style.color = 'var(--primary-blue)';
+            }
+        });
+
+        // Add hover effect to radio options
+        document.querySelectorAll('.radio-label').forEach(label => {
+            label.addEventListener('mouseenter', function() {
+                if (!this.previousElementSibling.checked) {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 8px 20px rgba(37, 99, 235, 0.2)';
+                }
+            });
+            
+            label.addEventListener('mouseleave', function() {
+                if (!this.previousElementSibling.checked) {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

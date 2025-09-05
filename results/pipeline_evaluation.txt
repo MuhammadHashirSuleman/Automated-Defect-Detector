@@ -1,0 +1,6 @@
+✅ MHS Pipeline Model Evaluation
+
+mAP50: 0.995
+Precision: 0.919 → validation metrics (91.9% of detections are correct)
+Recall: 1.000 → Perfect! 100% of defects are being detected ✅
+F1-score: 0.957 → Balanced measure of precision and recall

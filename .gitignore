@@ -1,0 +1,152 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database files (SQLite)
+*.db
+*.sqlite3
+database/*.db
+database/*.sqlite3
+
+# Model files (don't commit large model files)
+models/*.pt
+models/*.pth
+models/*.h5
+models/*.onnx
+models/checkpoints/
+!models/README.md
+
+# Dataset files (don't commit large datasets)
+datasets/**/*.jpg
+datasets/**/*.jpeg
+datasets/**/*.png
+datasets/**/*.bmp
+datasets/**/*.tiff
+datasets/**/*.txt
+datasets/**/*.xml
+datasets/**/*.json
+!datasets/README.md
+!datasets/sample_images/  # Keep sample images if needed
+
+# Results and output files
+results/*.jpg
+results/*.jpeg
+results/*.png
+results/*.csv
+results/plots/
+results/confusion_matrix/
+!results/README.md
+
+# Flask specific
+instance/
+.webassets-cache
+
+# Static files (can be generated)
+static/uploads/
+static/processed/
+static/models/
+
+# Logs
+*.log
+logs/
+*.logs
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.temp
+
+# Large files
+*.zip
+*.tar
+*.gz
+*.7z
+datasets/
+
+# Config files with secrets
+config.yaml
+config.json
+secrets.ini
+credentials.json
+*.key
+*.pem
+
+# Training checkpoints and large files
+runs/
+wandb/
+mlruns/
+
+# Package manager files
+Pipfile
+Pipfile.lock
+poetry.lock

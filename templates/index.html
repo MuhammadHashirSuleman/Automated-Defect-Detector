@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DefectDetect - AI-Powered Defect Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --light-blue: #3b82f6;
+            --fresh-blue: #60a5fa;
+            --sky-blue: #93c5fd;
+            --pale-blue: #dbeafe;
+            --pure-white: #ffffff;
+            --off-white: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--pure-white);
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--pure-white) !important;
+            border-bottom: 2px solid var(--pale-blue);
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.08);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-blue) !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--primary-blue) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            background-color: var(--pale-blue);
+            color: var(--primary-blue) !important;
+        }
+
+        .navbar-toggler {
+            border: 2px solid var(--primary-blue);
+            padding: 0.25rem 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2837, 99, 235, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--fresh-blue) 100%);
+            color: var(--pure-white);
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1 {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--fresh-blue);
+            border-color: var(--fresh-blue);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-outline-light {
+            border: 2px solid var(--pure-white);
+            color: var(--pure-white);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover,
+        .btn-outline-light:focus {
+            background-color: var(--pure-white);
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Features */
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--fresh-blue);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon:hover {
+            color: var(--primary-blue);
+            transform: scale(1.1);
+        }
+
+        #features {
+            background-color: var(--pure-white);
+            padding: 5rem 0;
+        }
+
+        #features h3 {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: linear-gradient(45deg, var(--pale-blue) 0%, var(--off-white) 100%);
+            padding: 5rem 0;
+        }
+
+        .how-it-works h2 {
+            color: var(--primary-blue);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--fresh-blue));
+            color: var(--pure-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .step-number:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .how-it-works h3 {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* Applications */
+        .applications-section {
+            background-color: var(--pure-white);
+            padding: 5rem 0;
+        }
+
+        .applications-section h2 {
+            color: var(--primary-blue);
+        }
+
+        .applications-section h4 {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .applications-section .fa-3x {
+            color: var(--fresh-blue);
+            transition: all 0.3s ease;
+        }
+
+        .applications-section .col-md-3:hover .fa-3x {
+            color: var(--primary-blue);
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
+            color: var(--pure-white);
+            padding: 3.5rem 0 2.5rem;
+        }
+
+        footer a {
+            color: var(--sky-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--pure-white);
+        }
+
+        footer hr {
+            border-color: var(--fresh-blue) !important;
+            opacity: 0.3;
+        }
+
+        footer .fab {
+            transition: all 0.3s ease;
+        }
+
+        footer .fab:hover {
+            color: var(--pure-white);
+            transform: scale(1.2);
+        }
+
+        /* Typography */
+        .display-4, .display-5 {
+            font-weight: 700;
+        }
+
+        .lead {
+            font-size: 1.3rem;
+            font-weight: 300;
+        }
+
+        .text-primary {
+            color: var(--fresh-blue) !important;
+        }
+
+        /* Card hover effects */
+        .feature-card, .step-card, .app-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .feature-card:hover, .step-card:hover, .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive Design - Mobile First */
+        @media (max-width: 575.98px) {
+            .hero-section {
+                padding: 4rem 0;
+                min-height: 60vh;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem !important;
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-section .lead {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .btn-lg {
+                font-size: 1rem;
+                padding: 0.75rem 1.5rem;
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+            }
+            
+            #features, .how-it-works, .applications-section {
+                padding: 3rem 0;
+            }
+            
+            .display-4 {
+                font-size: 2rem !important;
+            }
+            
+            .display-5 {
+                font-size: 1.75rem !important;
+            }
+            
+            .applications-section .fa-3x {
+                font-size: 2.5rem !important;
+            }
+            
+            footer {
+                padding: 2.5rem 0 1.5rem;
+                text-align: center;
+            }
+            
+            footer .col-md-4 {
+                margin-bottom: 2rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+            
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .hero-section {
+                padding: 5rem 0;
+                min-height: 65vh;
+            }
+            
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .btn-lg {
+                margin-bottom: 1rem;
+                margin-right: 0.5rem;
+            }
+            
+            #features, .how-it-works, .applications-section {
+                padding: 4rem 0;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .hero-section {
+                padding: 6rem 0;
+            }
+            
+            .btn-lg {
+                margin-right: 1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            #features, .how-it-works, .applications-section {
+                padding: 5rem 0;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .hero-section {
+                padding: 8rem 0;
+                min-height: 80vh;
+            }
+            
+            .feature-card:hover, .step-card:hover, .app-card:hover {
+                transform: translateY(-10px);
+            }
+            
+            #features, .how-it-works, .applications-section {
+                padding: 6rem 0;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .hero-section {
+                padding: 10rem 0;
+            }
+        }
+
+        /* Ensure proper spacing for all screen sizes */
+        .section-padding {
+            padding: 3rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .section-padding {
+                padding: 5rem 0;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-padding {
+                padding: 6rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('index') }}">
+                    <i class="fas fa-search fa-lg me-2"></i>DefectDetect
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#features">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#how-it-works">How It Works</a>
+                        </li>
+                        {% if 'username' in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10 col-sm-12">
+                    <h1 class="display-4 fw-bold mb-4">AI-Powered Defect Detection</h1>
+                    <p class="lead mb-5">Detect cracks and defects in materials with advanced computer vision algorithms</p>
+                    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+                        {% if 'username' in session %}
+                        <a href="{{ url_for('main') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                        {% else %}
+                        <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Login</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">Powerful Features</h2>
+                    <p class="lead">Our advanced detection system offers comprehensive analysis</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Multi-Type Detection</h3>
+                        <p>Identify various types of defects including cracks, corrosion, and structural anomalies</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>AI-Powered Analysis</h3>
+                        <p>Utilizes machine learning models trained on thousands of defect samples for accurate detection</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Detailed Reports</h3>
+                        <p>Receive comprehensive analysis reports with confidence scores and defect classifications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">How It Works</h2>
+                    <p class="lead">Simple process for powerful defect detection</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="step-card text-center h-100">
+                        <div class="step-number">1</div>
+                        <h3>Upload Image</h3>
+                        <p>Upload an image of the material or surface you want to analyze for defects</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="step-card text-center h-100">
+                        <div class="step-number">2</div>
+                        <h3>AI Processing</h3>
+                        <p>Our algorithms process the image using advanced computer vision techniques</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="step-card text-center h-100">
+                        <div class="step-number">3</div>
+                        <h3>Get Results</h3>
+                        <p>Receive detailed analysis with identified defects, locations, and confidence scores</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center mt-5">
+                    {% if 'username' in session %}
+                    <a href="{{ url_for('main') }}" class="btn btn-primary btn-lg">Start Detection</a>
+                    {% else %}
+                    <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">Create Account to Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications Section -->
+    <section class="applications-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">Applications</h2>
+                    <p class="lead">Suitable for various industries and use cases</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="app-card text-center h-100">
+                        <i class="fas fa-hard-hat fa-3x mb-3"></i>
+                        <h4>Construction</h4>
+                        <p>Concrete crack detection and structural analysis</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="app-card text-center h-100">
+                        <i class="fas fa-industry fa-3x mb-3"></i>
+                        <h4>Manufacturing</h4>
+                        <p>Product quality control and defect identification</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="app-card text-center h-100">
+                        <i class="fas fa-car fa-3x mb-3"></i>
+                        <h4>Automotive</h4>
+                        <p>Component inspection and maintenance planning</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="app-card text-center h-100">
+                        <i class="fas fa-home fa-3x mb-3"></i>
+                        <h4>Infrastructure</h4>
+                        <p>Bridge, road, and building maintenance inspection</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <h4 class="mb-3">
+                        <i class="fas fa-search me-2"></i>DefectDetect
+                    </h4>
+                    <p>Advanced AI-powered defect detection system for various materials and surfaces.</p>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <h4 class="mb-3">Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{{ url_for('index') }}" class="text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a href="#features" class="text-decoration-none">Features</a></li>
+                        <li class="mb-2"><a href="#how-it-works" class="text-decoration-none">How It Works</a></li>
+                        {% if 'username' in session %}
+                        <li class="mb-2"><a href="{{ url_for('main') }}" class="text-decoration-none">Dashboard</a></li>
+                        {% else %}
+                        <li class="mb-2"><a href="{{ url_for('login') }}" class="text-decoration-none">Login</a></li>
+                        <li class="mb-2"><a href="{{ url_for('signup') }}" class="text-decoration-none">Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    <h4 class="mb-3">Contact Us</h4>
+                    <p class="mb-3">
+                        <i class="fas fa-envelope me-2"></i> 
+                        <a href="mailto:support@defectdetect.com" class="text-decoration-none">support@defectdetect.com</a>
+                    </p>
+                    <div class="d-flex justify-content-center justify-content-lg-start">
+                        <a href="#" class="text-decoration-none me-4"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-decoration-none me-4"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-decoration-none me-4"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fab fa-github fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center pt-3">
+                <p class="mb-0">&copy; 2023 DefectDetect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Mobile-first responsive animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Initialize animations on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.feature-card, .step-card, .app-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `all 0.6s ease-out ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const offsetTop = targetSection.getBoundingClientRect().top + window.pageYOffset - 80;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Auto-collapse navbar on mobile after clicking a link
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 992) {
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                    }
+                });
+            });
+        });
+
+        // Handle window resize events
+        window.addEventListener('resize', () => {
+            // Adjust hero section height based on screen size
+            const heroSection = document.querySelector('.hero-section');
+            if (window.innerWidth < 576) {
+                heroSection.style.minHeight = '60vh';
+            } else if (window.innerWidth < 992) {
+                heroSection.style.minHeight = '70vh';
+            } else {
+                heroSection.style.minHeight = '80vh';
+            }
+        });
+    </script>
+</body>
+</html>

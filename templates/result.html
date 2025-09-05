@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --light-blue: #3b82f6;
+            --fresh-blue: #60a5fa;
+            --sky-blue: #93c5fd;
+            --pale-blue: #dbeafe;
+            --pure-white: #ffffff;
+            --off-white: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--pure-white);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1e293b;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Background Overlay */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            background: var(--pure-white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+            border: 1px solid var(--pale-blue);
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--pale-blue);
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h1 i {
+            margin-right: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link {
+            background: var(--fresh-blue);
+            color: var(--pure-white);
+        }
+
+        .back-link:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .logout-link {
+            background: var(--light-blue);
+            color: var(--pure-white);
+        }
+
+        .logout-link:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            flex: 1;
+            min-width: 200px;
+            background: var(--off-white);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--pale-blue);
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .status-item:nth-child(1) { animation-delay: 0.2s; }
+        .status-item:nth-child(2) { animation-delay: 0.4s; }
+        .status-item:nth-child(3) { animation-delay: 0.6s; }
+
+        .status-icon {
+            font-size: 32px;
+            color: var(--fresh-blue);
+            margin-bottom: 10px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .status-item:hover .status-icon {
+            transform: scale(1.1);
+            color: var(--primary-blue);
+        }
+
+        .status-label {
+            color: var(--light-blue);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            color: var(--primary-blue);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Image Section */
+        .image-section {
+            background: var(--off-white);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid var(--pale-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--fresh-blue);
+        }
+
+        .image-container {
+            text-align: center;
+        }
+
+        .processed-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .processed-image:hover {
+            transform: scale(1.02);
+        }
+
+        .image-caption {
+            margin-top: 15px;
+            color: var(--light-blue);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Report Section */
+        .report-section {
+            background: var(--off-white);
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid var(--pale-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--fresh-blue);
+        }
+
+        .report-title {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-title::before {
+            content: '\f0f6';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 32px;
+            color: var(--fresh-blue);
+        }
+
+        .report-content {
+            background: var(--pure-white);
+            color: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid var(--pale-blue);
+            max-height: 400px;
+            overflow-y: auto;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            background: var(--fresh-blue);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .secondary-btn {
+            background: var(--light-blue);
+        }
+
+        .secondary-btn:hover {
+            background: var(--primary-blue);
+        }
+
+        /* Image Zoom Modal */
+        .image-zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoomed-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem 1rem;
+                padding: 25px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .status-item {
+                min-width: auto;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-btn {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .report-title {
+                font-size: 1.3rem;
+            }
+
+            .status-icon {
+                font-size: 24px;
+            }
+
+            .action-btn {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Analysis Results</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('main') }}" class="nav-link back-link">New Analysis</a>
+                <a href="{{ url_for('logout') }}" class="nav-link logout-link" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-icon"><i class="fas fa-check-circle"></i></span>
+                <div class="status-label">Status</div>
+                <div class="status-value">Analysis Complete</div>
+            </div>
+            <div class="status-item">
+                <span class="status-icon"><i class="fas fa-clock"></i></span>
+                <div class="status-label">Processing Time</div>
+                <div class="status-value">2.3 seconds</div>
+            </div>
+            <div class="status-item">
+                <span class="status-icon"><i class="fas fa-bullseye"></i></span>
+                <div class="status-label">Confidence</div>
+                <div class="status-value">95.7%</div>
+            </div>
+        </div>
+
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ image }}" alt="Processed Image" class="processed-image" onclick="zoomImage(this)">
+                <div class="image-caption">Click image to zoom • Analysis visualization with detected features highlighted</div>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2 class="report-title">Detection Report</h2>
+            <pre class="report-content">{{ report }}</pre>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('main') }}" class="action-btn primary-btn">Analyze Another Image</a>
+            <button onclick="downloadReport()" class="action-btn secondary-btn">Download Report</button>
+        </div>
+    </div>
+
+    <div class="image-zoom-overlay" onclick="closeZoom()">
+        <img src="{{ image }}" alt="Zoomed Image" class="zoomed-image">
+    </div>
+
+    <script>
+        function zoomImage(img) {
+            const overlay = document.querySelector('.image-zoom-overlay');
+            overlay.style.display = 'flex';
+            overlay.style.animation = 'fadeInUp 0.3s ease-out';
+        }
+
+        function closeZoom() {
+            const overlay = document.querySelector('.image-zoom-overlay');
+            overlay.style.animation = 'fadeInUp 0.3s ease-out reverse';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        function downloadReport() {
+            const report = `{{ report }}`;
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'defect-detection-report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Downloaded!';
+            btn.style.background = 'var(--fresh-blue)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'var(--light-blue)';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

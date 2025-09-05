@@ -1,0 +1,5 @@
+✅ MHS Crack Model Evaluation on Test Set
+Accuracy : 0.9966
+Precision: 1.0000
+Recall   : 0.9966
+F1-score : 0.9983
